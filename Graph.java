@@ -1,11 +1,48 @@
 package CaseBased;
 
+class Edge {
+    private String nodeA;
+    private String nodeB;
+    private double jarak;
+    private int waktu;
+
+    public Edge(String nodeA, String nodeB, double jarak, int waktu) {
+        this.nodeA = nodeA;
+        this.nodeB = nodeB;
+        this.jarak = jarak;
+        this.waktu = waktu;
+    }
+
+    public String getNodeA() {
+        return nodeA;
+    }
+
+    public String getNodeB() {
+        return nodeB;
+    }
+
+    public double getJarak() {
+        return jarak;
+    }
+
+    public int getWaktu() {
+        return waktu;
+    }
+
+    @Override
+    public String toString() {
+        return nodeA + " <-> " + nodeB + " | Jarak: " + jarak + " km | Waktu: " + waktu + " menit";
+    }
+}
+
 class Graph {
     private int maxNodes;
     private String[] nodeNames;
     private double[][] distances;
     private int[][] times;
     private int nodeCount;
+    private Edge[] edges;
+    private int edgeCount;
 
     public Graph(int maxNodes) {
         this.maxNodes = maxNodes;
@@ -13,6 +50,8 @@ class Graph {
         this.distances = new double[maxNodes][maxNodes];
         this.times = new int[maxNodes][maxNodes];
         this.nodeCount = 0;
+        this.edges = new Edge[maxNodes * maxNodes];
+        this.edgeCount = 0;
 
         for (int i = 0; i < maxNodes; i++) {
             for (int j = 0; j < maxNodes; j++) {
@@ -63,6 +102,18 @@ class Graph {
         }
     }
 
+    public Edge[] getEdges() {
+        Edge[] result = new Edge[edgeCount];
+        for (int i = 0; i < edgeCount; i++) {
+            result[i] = edges[i];
+        }
+        return result;
+    }
+
+    public int getEdgeCount() {
+        return edgeCount;
+    }
+
     public void tambahJalur(String nodeA, String nodeB, double jarak, int waktu) {
         int idxA = getIndex(nodeA);
         int idxB = getIndex(nodeB);
@@ -72,6 +123,11 @@ class Graph {
             distances[idxB][idxA] = jarak;
             times[idxA][idxB] = waktu;
             times[idxB][idxA] = waktu;
+            
+            if (edgeCount < edges.length) {
+                edges[edgeCount] = new Edge(nodeA, nodeB, jarak, waktu);
+                edgeCount++;
+            }
         }
     }
 
